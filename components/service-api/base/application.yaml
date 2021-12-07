@@ -1,92 +1,148 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  name: service-api
   labels:
-    app: service-api-postgresql
-  name: service-api-postgresql
+    app: service-api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: service-api-postgresql
+      app: service-api
   template:
     metadata:
       labels:
-        app: service-api-postgresql
+        app: service-api
     spec:
       containers:
-        - name: service-api-postgresql
-          image: centos/postgresql-10-centos7
+        - image: quay.io/famargon/control-plane-service-api:latest
+          imagePullPolicy: Always
+          name: service-api
+          ports:
+            - containerPort: 8080
+              protocol: TCP
           env:
-            - name: POSTGRESQL_ADMIN_PASSWORD
-              value: admin1234
-            - name: POSTGRESQL_DATABASE
+            - name: SERVICE_API_DATASOURCE_URL
               valueFrom:
                 configMapKeyRef:
                   name: service-api-configmap
-                  key: pg-database-name
-            - name: POSTGRESQL_PASSWORD
-              valueFrom:
-                configMapKeyRef:
-                  name: service-api-configmap
-                  key: pg-pwd
-            - name: POSTGRESQL_USER
+                  key: pg-ds-url
+            - name: SERVICE_API_DATASOURCE_USERNAME
               valueFrom:
                 configMapKeyRef:
                   name: service-api-configmap
                   key: pg-user
-          ports:
-            - containerPort: 5432
-              protocol: TCP
-          readinessProbe:
-            tcpSocket:
-              port: 5432
-            initialDelaySeconds: 5
-            periodSeconds: 10
-          livenessProbe:
-            tcpSocket:
-              port: 5432
-            initialDelaySeconds: 15
-            periodSeconds: 20
-          volumeMounts:
-            - mountPath: /var/lib/pgsql/data
-              name: service-api-postgresql
+            - name: SERVICE_API_DATASOURCE_PASSWORD
+              valueFrom:
+                configMapKeyRef:
+                  name: service-api-configmap
+                  key: pg-pwd
+
+            - name: AUTH_ADMIN_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: service-api-configmap
+                  key: keycloak-url
+            - name: AUTH_ADMIN_REALM
+              valueFrom:
+                configMapKeyRef:
+                  name: service-api-configmap
+                  key: keycloak-default-realm
+            - name: AUTH_ADMIN_CLIENT_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: service-api-configmap
+                  key: keycloak-admin-client-id
+            - name: AUTH_ADMIN_GRANT_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: service-api-configmap
+                  key: keycloak-admin-grant-type
+
+            - name: AUTH_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: credential-example-keycloak
+                  key: ADMIN_USERNAME
+            - name: AUTH_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: credential-example-keycloak
+                  key: ADMIN_PASSWORD
+
+              # workaround auth.admin.disable.tls.verification
+            - name: AUTH_ADMIN_DISABLE_TLS_VERIFICATION
+              value: "true"
+
+            - name: LOG_LEVEL
+              value: DEBUG
+            # - name: QUARKUS_PROFILE
+              # value: prod
           resources:
             limits:
-              cpu: 350m
-              memory: 1500Mi
-            # requests:
-            #   cpu: 200m
-            #   memory: 600Mi
-      volumes:
-        - name: service-api-postgresql
-          persistentVolumeClaim:
-            claimName: service-api-postgresql
+              cpu: 500m
+              memory: 1000Mi
+            requests:
+              cpu: 200m
+              memory: 600Mi
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          terminationMessagePath: /dev/termination-log
+  strategy:
+    type: Recreate
 ---
+# Services for the components
 apiVersion: v1
 kind: Service
 metadata:
   labels:
-    name: service-api-postgresql
-  name: service-api-postgresql
+    app: service-api
+    template: service-api
+  name: service-api
 spec:
-  ports:
-    - port: 5432
-      protocol: TCP
-      targetPort: 5432
   selector:
-    app: service-api-postgresql
-  type: ClusterIP
+    app: service-api
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  sessionAffinity: None
+status:
+  loadBalancer: {}
+
 ---
+# Route
 apiVersion: v1
-kind: PersistentVolumeClaim
+kind: Route
 metadata:
+  name: service-api
   labels:
-    name: service-api-postgresql
-  name: service-api-postgresql
+    app: service-api
+    template: service-api
 spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 100Mi
+  to:
+    kind: Service
+    name: service-api
+    weight: 100
+  wildcardPolicy: None
+
+---
