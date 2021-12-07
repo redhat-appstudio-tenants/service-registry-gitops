@@ -1,30 +1,13 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
 metadata:
-  name: component-b
+  name: example-keycloak
+  namespace: managed-service-registry
+  labels:
+    app: sso
 spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: component-b
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: component-b
-    spec:
-      containers:
-      - name: component-b
-        image: quay.io/jgwest-redhat/sample-workload:latest
-        imagePullPolicy: Always
-#        command:
-#        - entrypoint.sh
-        env:
-          - name: ENV_VAR_FROM_CONFIG_MAP
-            valueFrom:
-              configMapKeyRef:
-                name: environment-config-map
-                key: environment-env-var
-          - name: ANOTHER_ENV_VAR
-            value: another-value
-
-        ports:
-        - containerPort: 8080
+  extensions:
+  - https://github.com/aerogear/keycloak-metrics-spi/releases/download/1.0.4/keycloak-metrics-spi-1.0.4.jar
+  externalAccess:
+    enabled: true
+  instances: 1
