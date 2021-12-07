@@ -219,5 +219,3 @@ spec:
     name: tenant-manager
     weight: 100
   wildcardPolicy: None
----
-no matches
