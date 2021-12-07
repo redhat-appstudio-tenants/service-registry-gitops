@@ -1,6 +1,6 @@
 
 resources:
-- cm-env-config-map.yaml
+- installed-using-gitops.yaml
 # - (resources will be applied in all environments, though environments may modify these via patches)
 
 apiVersion: kustomize.config.k8s.io/v1beta1
