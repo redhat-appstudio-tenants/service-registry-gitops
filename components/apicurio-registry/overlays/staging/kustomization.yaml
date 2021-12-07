@@ -1,5 +1,6 @@
 resources:
   - ../../base
+
 # - (additional resources that will only be applied in this environment)
 
 # patches to resources in this environment
