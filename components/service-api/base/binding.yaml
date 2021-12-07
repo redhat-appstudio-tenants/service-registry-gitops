@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-api-configmap
+data:
+  pg-user: service-api
+  pg-pwd: password
+  pg-ds-url: jdbc:postgresql://service-api-postgresql:5432/service-api-database
+  pg-database-name: service-api-database
+  keycloak-url: https://{KEYCLOAK_ROUTE_PLACEHOLDER}/auth
+  keycloak-default-realm: master
+  keycloak-admin-client-id: admin-cli
+  keycloak-admin-grant-type: password

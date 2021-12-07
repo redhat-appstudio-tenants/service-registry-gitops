@@ -6,7 +6,7 @@ metadata:
   namespace: managed-service-registry
 spec:
   targetNamespaces:
-  - managed-service-registry
+  - service-registry-staging
 ---
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription

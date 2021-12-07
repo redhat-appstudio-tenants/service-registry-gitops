@@ -2,6 +2,7 @@
 resources:
   - application.yaml
   - database.yaml
+  - binding.yaml
 
 
 # - (resources will be applied in all environments, though overlays may modify these via patches)
