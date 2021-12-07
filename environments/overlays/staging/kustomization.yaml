@@ -1,7 +1,10 @@
 resources:
 - ../../base
-- ../../../components/service-api/overlays/dev
-- ../../../components/apicurio-registry/overlays/dev
+- ../../../components/service-api/overlays/staging
+- ../../../components/apicurio-registry/overlays/staging
+- ../../../components/sso/overlays/staging
+
+
 # - (additional resources that will only be applied in this environment)
 
 # patches to resources in this environment
