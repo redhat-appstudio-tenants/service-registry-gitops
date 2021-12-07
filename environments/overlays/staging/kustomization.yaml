@@ -1,9 +1,10 @@
 resources:
 - ../../base
-- ../../../components/componentA/overlays/staging
-- ../../../components/componentB/overlays/staging
+- ../../../components/service-api/overlays/dev
+- ../../../components/apicurio-registry/overlays/dev
 # - (additional resources that will only be applied in this environment)
 
+# patches to resources in this environment
 namespace: service-registry-staging
 
 apiVersion: kustomize.config.k8s.io/v1beta1
