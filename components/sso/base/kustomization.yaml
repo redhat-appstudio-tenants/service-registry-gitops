@@ -1,7 +1,6 @@
 
 resources:
   - keycloak-cr.yaml
-  - install-operator.yaml
 
 # - (resources will be applied in all environments, though overlays may modify these via patches)
 
