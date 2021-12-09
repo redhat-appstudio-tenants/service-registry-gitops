@@ -1,3 +1,33 @@
+# Managed Service Registry Application GitOps
+
+After setting up the cluster using https://github.com/sbose78/service-registry-cluster-gitops, create the following to install the application components that would power the Service Registry
+
+```
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: service-registry-apps
+  namespace: service-registry-staging
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+  project: default
+  source:
+    path: environments/overlays/staging
+    repoURL: 'https://github.com/sbose78/service-registry-gitops'
+    targetRevision: HEAD
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - Validate=false
+      - PruneLast=true
+      - CreateNamespace=true
+
+```
+
+
 # GitOps Repository Template
 
 This is an example of what the AppStudio GitOps repository might look like for a simple application. This example contains two components ('component A' and 'component B'), and two environments ('dev' and 'staging').
