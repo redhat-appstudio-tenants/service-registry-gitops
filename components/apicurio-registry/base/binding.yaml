@@ -7,5 +7,5 @@ data:
   pg-pwd: password
   pg-ds-url: jdbc:postgresql://apicurio-registry-postgresql:5432/apicurio-registry-database
   pg-database-name: apicurio-registry-database
-  keycloak-url: https://keycloak-service-registry-staging.apps.ci-ln-jslxhbk-72292.origin-ci-int-gce.dev.rhcloud.com/auth
+  keycloak-url: https://keycloak-service-registry-staging.apps.jephilli-4-10-12-09-0629.devcluster.openshift.com
   keycloak-default-realm: master

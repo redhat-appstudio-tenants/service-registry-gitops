@@ -7,7 +7,7 @@ data:
   pg-pwd: password
   pg-ds-url: jdbc:postgresql://service-api-postgresql:5432/service-api-database
   pg-database-name: service-api-database
-  keycloak-url: https://keycloak-service-registry-staging.apps.ci-ln-jslxhbk-72292.origin-ci-int-gce.dev.rhcloud.com/auth
+  keycloak-url: https://keycloak-service-registry-staging.apps.jephilli-4-10-12-09-0629.devcluster.openshift.com
   keycloak-default-realm: master
   keycloak-admin-client-id: admin-cli
   keycloak-admin-grant-type: password
