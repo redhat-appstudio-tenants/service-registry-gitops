@@ -3,7 +3,6 @@ resources:
 - ../../../components/service-api/overlays/staging
 - ../../../components/apicurio-registry/overlays/staging
 - ../../../components/sso/overlays/staging
-- allow-argocd.yaml
 
 
 
