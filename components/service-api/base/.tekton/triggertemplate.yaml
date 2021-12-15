@@ -1,0 +1,33 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: service-api
+spec:
+  params:
+    - name: git-revision
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: srs-fleet-manager-
+      spec:
+        params:
+          - name: git-url
+            value: 'https://github.com/sbose78/srs-fleet-manager'
+          - name: output-image
+            value: 'docker.io/sbose78/srs-fleet-manager:$(tt.params.git-revision)'
+          - name: context
+            value: .
+          - name: dockerfile
+            value: Dockerfile
+          - name: revision
+            value: $(tt.params.git-revision)
+          - name: PATH_CONTEXT
+            value: .
+        pipelineRef:
+          name: docker-build
+        workspaces:
+          - name: workspace
+            persistentVolumeClaim: 
+              claimName: app-studio-default-workspace # this PVC must already exist
+            subPath: 'srs-fleet-manager/$(tt.params.git-revision)'
