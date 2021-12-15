@@ -22,6 +22,8 @@ spec:
             value: Dockerfile
           - name: revision
             value: $(tt.params.git-revision)
+          - name: PATH_CONTEXT
+            value: .
         pipelineRef:
           name: docker-build
         workspaces:
