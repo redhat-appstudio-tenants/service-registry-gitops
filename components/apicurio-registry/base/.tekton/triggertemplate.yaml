@@ -28,4 +28,4 @@ spec:
           - name: workspace
             persistentVolumeClaim: 
               claimName: app-studio-default-workspace # this PVC must already exist
-              subPath: apicurio-registry/$(tt.params.git-revision)
+            subPath: apicurio-registry/$(tt.params.git-revision)
