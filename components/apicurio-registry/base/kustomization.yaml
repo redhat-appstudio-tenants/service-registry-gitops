@@ -3,6 +3,8 @@ resources:
   - application.yaml
   - database.yaml
   - binding.yaml
+  - .tekton/
+  
 
 # - (resources will be applied in all environments, though overlays may modify these via patches)
 
