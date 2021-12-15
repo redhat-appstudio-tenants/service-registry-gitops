@@ -1,0 +1,31 @@
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: apicurio-registry
+spec:
+  params:
+    - name: git-revision
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: application-service-
+      spec:
+        params:
+          - name: git-url
+            value: 'https://github.com/sbose78/apicurio-registry'
+          - name: output-image
+            value: 'docker.io/sbose78/apicurio-registry:$(tt.params.git-revision)'
+          - name: context
+            value: .
+          - name: dockerfile
+            value: Dockerfile
+          - name: revision
+            value: $(tt.params.git-revision)
+        pipelineRef:
+          name: docker-build
+        workspaces:
+          - name: workspace
+            persistentVolumeClaim: 
+              claimName: app-studio-default-workspace # this PVC must already exist
+              subPath: apicurio-registry/$(tt.params.git-revision)
