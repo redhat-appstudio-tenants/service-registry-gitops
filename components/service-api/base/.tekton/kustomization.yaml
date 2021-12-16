@@ -1,5 +1,4 @@
 resources:
-- pipeline.yaml
 - triggertemplate.yaml
 - event-listener.yaml
 - webhook-ingress.yaml
