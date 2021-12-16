@@ -2,7 +2,6 @@ resources:
 - triggertemplate.yaml
 - event-listener.yaml
 - webhook-ingress.yaml
-- pvc.yaml
 
 # Skip applying the Tekton operands while the Tekton operator is being installed.
 # See more information about this option, here: 
