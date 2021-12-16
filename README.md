@@ -4,15 +4,15 @@
 
 ## Where is my CI configuration ?
 
-* [components/apicurio-registry/.tekton](components/apicurio-registry/.tekton) 
-* [components/service-api/.tekton](components/service-api/.tekton)
+* [components/apicurio-registry/base/.tekton](components/apicurio-registry/base/.tekton) 
+* [components/service-api/base/.tekton](components/service-api/base/.tekton)
 
 
 ## Where is my CD configuration ?
 
-* [components/apicurio-registry](components/apicurio-registry) 
-* [components/service-api](components/service-api)
-* [components/sso](components/sso)
+* [components/apicurio-registry/base](components/apicurio-registry/base) 
+* [components/service-api/base](components/service-api/base)
+* [components/sso/base](components/sso/base)
 
 ## Try !
 
