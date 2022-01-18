@@ -81,6 +81,7 @@ spec:
             - -Pprod
             - -Pno-docker
             - -Dskip.yarn
+            - -Dtar.long.file.mode=posix
             - -Psql
             - -Pmultitenancy
             - -Dmaven.javadoc.skip=true
