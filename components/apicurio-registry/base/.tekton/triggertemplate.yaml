@@ -1,7 +1,48 @@
+---
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: apicurio-registry
+  name: service-registry
+spec:
+  params:
+    - name: git-revision
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        generateName: service-registry-
+      spec:
+        params:
+          - name: git-url
+            value: "https://github.com/goldmann/apicurio-registry"
+          - name: output-image
+            value: "quay.io/goldmann/srs-service-registry:$(tt.params.git-revision)"
+          - name: context
+            value: .
+          - name: dockerfile
+            value: "Dockerfile.sql.jvm"
+          - name: revision
+            value: $(tt.params.git-revision)
+          - name: path-context
+            value: "distro/docker/target/docker"
+        pipelineRef:
+          name: service-registry-build
+        workspaces:
+          - name: workspace
+            persistentVolumeClaim:
+              claimName: app-studio-default-workspace
+            subPath: "service-registry/$(tt.params.git-revision)"
+          - name: registry-auth
+            secret:
+              secretName: quay-registry-secret
+          - name: git-auth
+            secret:
+              secretName: git-repo-secret
+---
+apiVersion: triggers.tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: service-registry-tenant-manager
 spec:
   params:
     - name: git-revision
@@ -13,21 +54,27 @@ spec:
       spec:
         params:
           - name: git-url
-            value: 'https://github.com/sbose78/apicurio-registry'
+            value: "https://github.com/goldmann/apicurio-registry"
           - name: output-image
-            value: 'docker.io/sbose78/apicurio-registry:$(tt.params.git-revision)'
+            value: "quay.io/goldmann/srs-tenant-manager:$(tt.params.git-revision)"
           - name: context
             value: .
           - name: dockerfile
-            value: Dockerfile
+            value: "src/main/docker/Dockerfile.jvm"
           - name: revision
             value: $(tt.params.git-revision)
-          - name: PATH_CONTEXT
-            value: .
+          - name: path-context
+            value: "multitenancy/tenant-manager-api"
         pipelineRef:
-          name: docker-build
+          name: service-registry-build
         workspaces:
           - name: workspace
-            persistentVolumeClaim: 
-              claimName: app-studio-default-workspace # this PVC must already exist
-            subPath: 'apicurio-registry/$(tt.params.git-revision)'
+            persistentVolumeClaim:
+              claimName: app-studio-default-workspace
+            subPath: "service-registry-tenant-manager/$(tt.params.git-revision)"
+          - name: registry-auth
+            secret:
+              secretName: quay-registry-secret
+          - name: git-auth
+            secret:
+              secretName: git-repo-secret
