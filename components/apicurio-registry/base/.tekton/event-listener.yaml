@@ -9,4 +9,9 @@ spec:
         - kind: ClusterTriggerBinding
           ref: github-push
       template:
-        ref: apicurio-registry
+        ref: service-registry
+    - bindings:
+        - kind: ClusterTriggerBinding
+          ref: github-push
+      template:
+        ref: service-registry-tenant-manager
