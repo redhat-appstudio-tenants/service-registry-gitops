@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: apicurio-registry
-          image: quay.io/apicurio/apicurio-registry-sql:latest-snapshot
+          image: quay.io/goldmann/srs-service-registry:hacbs
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -94,7 +94,7 @@ spec:
             failureThreshold: 3
           terminationMessagePath: /dev/termination-log
         - name: tenant-manager
-          image: quay.io/apicurio/apicurio-registry-tenant-manager-api:latest-snapshot
+          image: quay.io/goldmann/srs-tenant-manager:hacbs
           imagePullPolicy: Always
           ports:
             - containerPort: 8585
@@ -132,7 +132,7 @@ spec:
               memory: 600Mi
           livenessProbe:
             httpGet:
-              path: /health/live
+              path: /q/health/live
               port: 8585
               scheme: HTTP
             initialDelaySeconds: 5
@@ -142,7 +142,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /health/ready
+              path: /q/health/ready
               port: 8585
               scheme: HTTP
             initialDelaySeconds: 5
