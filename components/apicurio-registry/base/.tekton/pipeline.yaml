@@ -43,7 +43,7 @@ spec:
           operator: in
           values: ["false"]
       runAfter:
-        - appstudio-init
+        - appstudio-configure-build
       params:
         - name: url
           value: $(params.git-url)
@@ -89,7 +89,7 @@ spec:
             - -DtrimStackTrace=false
             - -DskipTests
       runAfter:
-        - appstudio-configure-build
+        - clone-repository
       taskRef:
         kind: ClusterTask
         name: maven
