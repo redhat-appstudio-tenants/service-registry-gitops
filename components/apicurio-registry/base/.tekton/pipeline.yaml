@@ -43,7 +43,7 @@ spec:
           operator: in
           values: ["false"]
       runAfter:
-        - appstudio-configure-build
+        - appstudio-init
       params:
         - name: url
           value: $(params.git-url)
@@ -57,7 +57,7 @@ spec:
           workspace: workspace
     - name: appstudio-configure-build
       runAfter:
-        - appstudio-init
+        - clone-repository
       when:
         - input: $(tasks.appstudio-init.results.exists)
           operator: in
